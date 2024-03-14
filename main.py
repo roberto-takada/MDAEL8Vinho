@@ -4,10 +4,10 @@ from sklearn.preprocessing import MinMaxScaler
 
 def main():
 
-    arquivo_entrada = 'winequality-all.csv'
-    arquivo_saida = 'winequality-all-clean.csv'
-    nomes_das_colunas = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality', 'type']
-    colunas_a_utilizar = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality', 'type']
+    arquivo_entrada = 'winequality-white.csv'
+    arquivo_saida = 'winequality-white-clean.csv'
+    nomes_das_colunas = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality']
+    colunas_a_utilizar = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality']
     dados_na_memoria = pd.read_csv(arquivo_entrada, names=nomes_das_colunas, usecols=colunas_a_utilizar, na_values='?')
 
     MostraInformacoesDoDataFrame(dados_na_memoria)
@@ -18,8 +18,8 @@ def main():
 
     dados_na_memoria.to_csv(arquivo_saida, header=False, index=False)
 
-    arquivo_entrada = 'winequality-all-clean.csv'
-    arquivo_saida = 'winequality-all-normalized.csv'
+    arquivo_entrada = 'winequality-white-clean.csv'
+    arquivo_saida = 'winequality-white-normalized.csv'
     nomes_das_colunas = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality']
     valores_independentes = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol']
     valores_dependentes = 'quality'
@@ -31,14 +31,17 @@ def main():
     #Normalização com Z-score
     x_zscore = StandardScaler().fit_transform(x)
     dataframe_normalizado_zscore = pd.DataFrame(data = x_zscore, columns = valores_independentes)
-    #dataframe_normalizado_zscore = pd.concat([dataframe_normalizado_zscore, dados_na_memoria[[valores_dependentes]]], axis = 1)
+    dataframe_variaveis_dependentes = pd.DataFrame(data = y, columns = [valores_dependentes])
+    dataframe_normalizado_zscore = pd.concat([dataframe_normalizado_zscore, dataframe_variaveis_dependentes], axis = 1)
     MostraInformacoesDoDataFrame(dataframe_normalizado_zscore)
 
     #Normalização Min-Max
     x_minmax = MinMaxScaler().fit_transform(x)
     dataframe_normalizado_minmax = pd.DataFrame(data = x_minmax, columns = valores_independentes)
-    #dataframe_normalizado_minmax = pd.concat([dataframe_normalizado_minmax, dados_na_memoria[[valores_dependentes]]], axis = 1)
+    dataframe_variaveis_dependentes = pd.DataFrame(data = y, columns = [valores_dependentes])
+    dataframe_normalizado_minmax = pd.concat([dataframe_normalizado_minmax, dataframe_variaveis_dependentes], axis = 1)
     MostraInformacoesDoDataFrame(dataframe_normalizado_minmax)
+    dataframe_normalizado_minmax.to_csv(arquivo_saida, header=False, index=False)
 
 
 def MostraInformacoesDoDataFrame(dados_na_memoria):
