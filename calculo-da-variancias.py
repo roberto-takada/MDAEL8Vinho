@@ -1,10 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sn
 
 def main():
     arquivo_entrada = 'winequality-white-clean.csv'
     nomes_das_colunas = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol', 'quality']
-    valores_dependentes = 'quality'
     dados_na_memoria = pd.read_csv(arquivo_entrada, names= nomes_das_colunas)
 
     desvio_padrao = dados_na_memoria.std()
@@ -27,7 +27,6 @@ def main():
     print(amplitude)
     print("\n\n")
 
-    dados_na_memoria = pd.read_csv(arquivo_entrada, names= nomes_das_colunas, usecols=[valores_dependentes])
     PlotaHistograma(dados_na_memoria)
     intervalos = [3,5,7,9]
     dados_na_memoria['Intervalo de Classe'] = pd.cut(dados_na_memoria['quality'], intervalos)
@@ -39,7 +38,10 @@ def main():
     print(tabela_final)
 
 def PlotaHistograma(database):
-    plt.hist(database, bins= 3)
+    plt.figure(figsize=
+               (5,3))
+    sn.histplot(data=database, x='quality', binwidth=1)
+    #sn.histplot(data=database, x='quality', binwidth=2)
     plt.xlabel('Valores')
     plt.ylabel('Frequência')
     plt.title('Histograma')
