@@ -2,6 +2,7 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn import tree
 import matplotlib.pyplot as plt
+import seaborn as sn
 
 def decision_tree(dados):
     X = dados.drop('quality', axis=1)
@@ -11,9 +12,12 @@ def decision_tree(dados):
     clf = tree.DecisionTreeClassifier(random_state=0)
     clf = clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
-    tree.plot_tree(clf)
+    #tree.plot_tree(clf)
+    conf_matrix = metrics.confusion_matrix(y_test, y_pred)
+    sn.heatmap(conf_matrix, cmap='coolwarm', annot=True, linewidth=1, fmt='d')
     plt.show()
-
-    print("Accuracy:", metrics.accuracy_score(y_test, y_pred))
+    class_report = metrics.classification_report(y_test, y_pred)
+    print(f'Relatório de classificação:\n{class_report}')
+    
 
 
